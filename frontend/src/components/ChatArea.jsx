@@ -1,11 +1,11 @@
 function ChatArea({ messages }) {
   return (
     <div>
-      <p>🤖 Hello! I'm your AI Assistant.</p>
+      <h3>Chat</h3>
 
       {messages.map((msg, index) => (
         <p key={index}>
-          👤 {msg}
+          {msg.role === "user" ? "👤" : "🤖"} {msg.text}
         </p>
       ))}
     </div>
