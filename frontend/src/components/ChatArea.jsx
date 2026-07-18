@@ -1,13 +1,15 @@
-function ChatArea({ messages }) {
+function ChatArea({ messages, loading }) {
   return (
     <div>
-      <h3>Chat</h3>
+      <h2>Chat</h2>
 
       {messages.map((msg, index) => (
         <p key={index}>
-          {msg.role === "user" ? "👤" : "🤖"} {msg.text}
+          {msg.role === "user" ? "👤" : "🤖"} {msg.content}
         </p>
       ))}
+
+      {loading && <p>🤖 Thinking...</p>}
     </div>
   );
 }

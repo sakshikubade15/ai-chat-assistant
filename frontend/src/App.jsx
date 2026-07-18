@@ -7,44 +7,68 @@ import API from "./services/api";
 function App() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(false);
 
  async function sendMessage() {
+  if (loading) return;
   if (message.trim() === "") return;
 
   try {
-    const response = await API.post("/api/chat", {
-      message: message,
-    });
+    // Create conversation including new user message
+const updatedMessages = [
+  ...messages,
+  {
+    role: "user",
+    content: message,
+  },
+];
+setLoading(true);
+// Send complete conversation
+const response = await API.post("/api/chat", {
+  messages: updatedMessages,
+});
 
     setMessages([
-      ...messages,
-      {
-        role: "user",
-        text: message,
-      },
-      {
-        role: "assistant",
-        text: response.data.reply,
-      },
-    ]);
+  ...updatedMessages,
+  {
+    role: "assistant",
+    content: response.data.reply,
+  },
+]);
+setLoading(false);
 
     setMessage("");
 
   } catch (error) {
-    console.log(error);
-  }
+
+  console.error(error);
+
+  setMessages([
+    ...messages,
+    {
+      role: "assistant",
+      content: "❌ Sorry! Something went wrong. Please try again.",
+    },
+  ]);
+
+  setLoading(false);
+}
 }
   return (
     <div>
       <Header title="AI Chat Assistant" />
 
-      <ChatArea messages={messages} />
+      <ChatArea
+    messages={messages}
+    loading={loading}
+/>
 
       <InputBox
-        message={message}
-        setMessage={setMessage}
-        sendMessage={sendMessage}
-      />
+    message={message}
+    setMessage={setMessage}
+    sendMessage={sendMessage}
+    loading={loading}
+/>
     </div>
   );
 }

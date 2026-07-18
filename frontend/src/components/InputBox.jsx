@@ -1,8 +1,8 @@
-
 function InputBox({
   message,
   setMessage,
   sendMessage,
+  loading,
 }) {
   return (
     <div>
@@ -15,9 +15,12 @@ function InputBox({
         }
       />
 
-      <button onClick={sendMessage}>
-        Send
-      </button>
+     <button
+  onClick={sendMessage}
+  disabled={loading}
+>
+  {loading ? "Thinking..." : "Send"}
+</button>
     </div>
   );
 }
